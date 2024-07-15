@@ -2,16 +2,22 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
 from hotels.router import get_hotels_by_location_and_time
 from fastapi_cache.decorator import cache
+from fastapi.responses import HTMLResponse
 
 router = APIRouter(
-    prefix="/pages",
+    prefix="",
     tags=["Фронтенд"]
 )
 
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/hotels")
+@router.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@router.get("/search", response_class=HTMLResponse)
 # @cache(expire=30)
 async def get_hotels_page(
         request: Request,

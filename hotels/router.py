@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.get("/hotels", response_model=List[SchemeHotel])
+@router.get("", response_model=List[SchemeHotel])
 async def get_hotels_by_location_and_time(
     location: str,
     date_from: date = Query(..., description="Дата начала в формате YYYY-MM-DD"),

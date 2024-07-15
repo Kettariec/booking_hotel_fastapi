@@ -7,7 +7,7 @@ router = APIRouter(
 )
 
 
-@router.post("/hotels")
+@router.post("")
 async def add_hotel_image(name: int, file: UploadFile):
     with open(f"static/images/{name}.webp", "wb+") as file_object:
         shutil.copyfileobj(file.file, file_object)
