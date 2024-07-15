@@ -25,4 +25,4 @@ async def add_booking(
     if not new_booking:
         raise RoomCannotBeBooked
 
-    background_tasks.add_task(send_booking_message, user.email)
+    background_tasks.add_task(send_booking_message, new_booking, user.email)
