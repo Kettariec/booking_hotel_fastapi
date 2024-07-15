@@ -14,8 +14,7 @@ def booking_message(booking: Booking,email_to: EmailStr):
 
     email.set_content(
         f"""
-        <h1> You are booking!</h1>
-        {booking}
+        <h1> {booking} </h1>
         """,
         subtype="html"
     )
