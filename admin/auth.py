@@ -36,4 +36,4 @@ class AdminAuth(AuthenticationBackend):
             return False
 
 
-authentication_backend = AdminAuth(secret_key="...")
+authentication_backend = AdminAuth(secret_key=settings.SECRET_KEY)
