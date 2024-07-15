@@ -5,7 +5,7 @@ from users.dependencies import get_current_user
 from datetime import date
 from exceptions import RoomCannotBeBooked
 from fastapi import BackgroundTasks
-from tasks.tasks import send_mail
+from tasks.tasks import send_booking_message
 
 
 router = APIRouter(
@@ -25,4 +25,4 @@ async def add_booking(
     if not new_booking:
         raise RoomCannotBeBooked
 
-    background_tasks.add_task(send_mail)
+    background_tasks.add_task(send_booking_message, user.email)

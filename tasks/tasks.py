@@ -4,12 +4,12 @@ from pydantic import EmailStr
 from config import settings
 
 
-def send_mail():
+def booking_message(email_to: EmailStr):
     email = EmailMessage()
 
     email["Subject"] = "Confirm booking"
     email["From"] = settings.SMTP_USER
-    email["To"] = settings.SMTP_USER
+    email["To"] = email_to
 
     email.set_content(
         f"""
@@ -21,7 +21,8 @@ def send_mail():
     return email
 
 
-def send_booking():
+def send_booking_message(email_to: EmailStr):
+    message = booking_message(email_to)
     with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT) as server:
         server.login(settings.SMTP_USER, settings.SMTP_PASS)
-        server.send_message(send_mail())
+        server.send_message(message)
