@@ -71,7 +71,6 @@ class HotelDAO(BaseDAO):
             hotels_result = await session.execute(get_hotels)
             hotels = hotels_result.fetchall()
 
-            # Преобразование результатов запроса в список объектов SchemeHotel
             scheme_hotels = []
             for hotel_row in hotels:
                 hotel_data = {

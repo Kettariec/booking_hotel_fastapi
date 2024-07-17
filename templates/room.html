@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Rooms</title>
+    <title>Room</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,6 +61,12 @@
     </style>
     <script>
         async function bookRoom(roomId, dateFrom, dateTo) {
+
+            if (!dateFrom || !dateTo || isNaN(Date.parse(dateFrom)) || isNaN(Date.parse(dateTo))) {
+                alert('Пожалуйста, введите корректные даты.');
+                return;
+            }
+
             const response = await fetch('/booking/add', {
                 method: 'POST',
                 headers: {
@@ -77,19 +83,30 @@
                 alert('Бронирование произведено успешно!');
             } else {
                 const errorData = await response.json();
-                alert(`Ошибка бронирования: ${errorData.detail}`);
+                alert(`Ошибка бронирования: ${errorData.detail.map(error => error.msg).join(', ')}`);
             }
         }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dateFrom = urlParams.get('date_from');
+            const dateTo = urlParams.get('date_to');
+
+            document.querySelectorAll('.book-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const roomId = button.getAttribute('data-room-id');
+                    bookRoom(roomId, dateFrom, dateTo);
+                });
+            });
+        });
     </script>
 </head>
 <body>
-{% if rooms %}
-    {% for room in rooms %}
     <div class="room-container">
         <div class="room-header">
-            <a href="/rooms/{{ room.id }}?date_from={{ date_from }}&date_to={{ date_to }}">
-            <h1>{{ room.name }}</h1>
-        </a>
+
+                <h1>{{ room.name }}</h1>
+
         </div>
         <div class="room-body">
             <img src="/static/images/{{ room.image_id }}.webp" alt="Photo of room" width="400">
@@ -103,12 +120,8 @@
         </div>
         <div class="room-footer">
             <h1>{{ room.price }} рублей / ночь</h1>
-            <button class="book-button" onclick="bookRoom({{ room.id }}, '{{ date_from }}', '{{ date_to }}')">Забронировать</button>
+            <button class="book-button" data-room-id="{{ room.id }}">Забронировать</button>
         </div>
     </div>
-    {% endfor %}
-{% else %}
-    <p>Нет доступных номеров для выбранного периода.</p>
-{% endif %}
 </body>
 </html>
