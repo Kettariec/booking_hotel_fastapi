@@ -3,7 +3,7 @@ from hotels.rooms.model import Room
 from database import async_session_maker
 from datetime import date
 from bookings.model import Booking
-from sqlalchemy import select, and_, or_, not_, func
+from sqlalchemy import select, and_, or_, func
 
 
 class RoomDAO(BaseDAO):

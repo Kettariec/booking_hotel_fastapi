@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from bookings.dao import BookingDAO
 from users.model import User
 from users.dependencies import get_current_user

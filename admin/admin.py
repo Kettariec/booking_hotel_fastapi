@@ -1,4 +1,4 @@
-from sqladmin import Admin, ModelView
+from sqladmin import ModelView
 from bookings.model import Booking
 from hotels.model import Hotel
 from hotels.rooms.model import Room
@@ -18,8 +18,8 @@ class UserAdmin(ModelView, model=User):
 
 class BookingAdmin(ModelView, model=Booking):
     column_list = [c.name for c in Booking.__table__.c] + [Booking.user]
-    name = "Бронь"
-    name_plural = "Брони"
+    name = "Бронирование"
+    name_plural = "Бронирования"
 
 
 class HotelAdmin(ModelView, model=Hotel):

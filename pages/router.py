@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Request, Depends, Query
 from fastapi.templating import Jinja2Templates
 from hotels.router import get_hotels_by_location_and_time
-from fastapi_cache.decorator import cache
 from datetime import date
 from hotels.rooms.dao import RoomDAO
 from hotels.rooms.scheme import SchemeRoom
 from fastapi.responses import HTMLResponse
 from typing import List
 from hotels.scheme import SchemeHotel
+# from fastapi_cache.decorator import cache
 
 router = APIRouter(
     prefix="",

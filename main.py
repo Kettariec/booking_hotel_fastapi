@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
-from sqladmin import Admin, ModelView
+from sqladmin import Admin
 from admin.auth import authentication_backend
 from bookings.router import router as router_booking
 from database import engine
