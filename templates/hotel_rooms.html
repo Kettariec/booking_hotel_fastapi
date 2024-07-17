@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Rooms</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +11,7 @@
             margin: 0;
             padding: 20px;
         }
-        .hotel-container {
+        .room-container {
             display: flex;
             flex-wrap: wrap;
             background: white;
@@ -22,31 +21,28 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             position: relative;
         }
-        .hotel-header, .hotel-body {
+        .room-header, .room-body {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
             flex: 1 1 100%;
         }
-        .hotel-header h2, .hotel-header h1, .hotel-body h2, .hotel-body h1 {
+        .room-header h2, .room-header h1, .room-body h2, .room-body h1 {
             margin: 0 10px 0 0;
         }
-        .hotel-body img {
+        .room-body img {
             margin: 10px 20px 10px 0;
             border-radius: 8px;
         }
-        .hotel-description, .hotel-services {
+        .room-description, .room-services {
             margin: 0 10px 10px 0;
         }
-        .hotel-stars {
-            margin-right: 20px;
-        }
-        .hotel-footer {
+        .room-footer {
             position: absolute;
             bottom: 20px;
             right: 20px;
         }
-        .hotel-footer h1 {
+        .room-footer h1 {
             margin: 0;
             font-size: 1.3em;
             color: green;
@@ -87,39 +83,25 @@
     </script>
 </head>
 <body>
-{% for hotel in hotels %}
-<div class="hotel-container">
-    <div class="hotel-header">
-        <h2>{{ hotel.location }}</h2>
-        <pre>   </pre>
-        <a href="/hotels/{{ hotel.hotel_id }}?date_from={{ date_from }}&date_to={{ date_to }}">
-            <h1>{{ hotel.name }}</h1>
-        </a><h2 class="hotel-stars">{{ hotel.stars }}*</h2>
+{% for room in rooms %}
+<div class="room-container">
+    <div class="room-header">
+        <h1>Номер {{ room.name }}</h1>
+        <h2>{{ room.hotel_name }}</h2>
     </div>
-    <div class="hotel-body">
-        <img src="{{ url_for('static', path='images/' + hotel.hotel_image_id|string + '.webp') }}" alt="Photo of hotel" width="400">
-        <div class="hotel-description">
-            <h2>{{ hotel.description }}</h2>
+    <div class="room-body">
+        <img src="{{ url_for('static', path='images/' + room.image_id|string + '.webp') }}" alt="Photo of room" width="400">
+        <div class="room-description">
+            <h2>{{ room.description }}</h2>
         </div>
         <pre>      </pre>
-        <div class="hotel-services">
-            <h2>{{ hotel.hotel_services }}</h2>
+        <div class="room-services">
+            <h2>{{ room.services }}</h2>
         </div>
     </div>
-    <h1>Номер {{ hotel.rooms_name }}</h1>
-    <div class="hotel-body">
-        <img src="{{ url_for('static', path='images/' + hotel.room_image_id|string + '.webp') }}" alt="Photo of room" width="400">
-        <div class="hotel-description">
-            <h2>{{ hotel.rooms_description }}</h2>
-        </div>
-        <pre>      </pre>
-        <div class="hotel-services">
-            <h2>{{ hotel.room_services }}</h2>
-        </div>
-    </div>
-    <div class="hotel-footer">
-        <h1>{{ hotel.price }} рублей / ночь</h1>
-        <button class="book-button" onclick="bookRoom({{ hotel.room_id }}, '{{ date_from }}', '{{ date_to }}')">Забронировать</button>
+    <div class="room-footer">
+        <h1>{{ room.price }} рублей / ночь</h1>
+        <button class="book-button" onclick="bookRoom({{ room.id }}, '{{ date_from }}', '{{ date_to }}')">Забронировать</button>
     </div>
 </div>
 {% endfor %}

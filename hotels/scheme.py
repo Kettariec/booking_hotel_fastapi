@@ -18,6 +18,5 @@ class SchemeHotel(BaseModel):
     price: int
     room_image_id: int
 
-
     class Config:
         from_attributes = True
