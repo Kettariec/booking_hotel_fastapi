@@ -12,18 +12,18 @@ class RoomDAO(BaseDAO):
     @classmethod
     async def find_available_rooms(cls, hotel_id: int, date_from: date, date_to: date):
         async with async_session_maker() as session:
-            booked_rooms = (
-                select(Booking.room_id)
-                .where(
+            booked_rooms = select(Booking.room_id).where(
+                or_(
                     and_(
-                        Booking.room_id == Room.id,
-                        or_(
-                            and_(Booking.date_from <= date_to, Booking.date_to >= date_from),
-                        )
+                        Booking.date_from >= date_from,
+                        Booking.date_from <= date_to
+                    ),
+                    and_(
+                        Booking.date_from <= date_from,
+                        Booking.date_to > date_from
                     )
                 )
-                .alias("booked_rooms")
-            )
+            ).cte("booked_rooms")
 
             free_rooms_query = (
                 select(Room)
