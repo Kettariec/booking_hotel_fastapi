@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: url('/static/images/background.jpg') repeat;
             margin: 0;
             padding: 20px;
         }
         .room-container {
             display: flex;
             flex-wrap: wrap;
-            background: white;
+            background-color: rgba(255, 255, 255, 0.85);
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 8px;
@@ -90,7 +90,7 @@
         <h2>{{ room.hotel_name }}</h2>
     </div>
     <div class="room-body">
-        <img src="{{ url_for('static', path='images/' + room.image_id|string + '.webp') }}" alt="Photo of room" width="400">
+        <img src="/static/images/{{ room.image_id }}.webp" alt="Photo of room" width="400">
         <div class="room-description">
             <h2>{{ room.description }}</h2>
         </div>
