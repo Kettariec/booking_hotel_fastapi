@@ -58,6 +58,18 @@
             text-decoration: none;
             font-size: 1em;
         }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
     </style>
     <script>
         async function bookRoom(roomId, dateFrom, dateTo) {
@@ -104,9 +116,9 @@
 <body>
     <div class="room-container">
         <div class="room-header">
-
-                <h1>{{ room.name }}</h1>
-
+             <a href="/hotels/{{ room.hotel_id }}?date_from={{ date_from }}&date_to={{ date_to }}" class="back-button">Назад к отелю</a>
+            <pre>   </pre>
+            <h1>{{ room.name }}</h1>
         </div>
         <div class="room-body">
             <img src="/static/images/{{ room.image_id }}.webp" alt="Photo of room" width="400">

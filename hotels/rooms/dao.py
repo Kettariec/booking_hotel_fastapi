@@ -10,9 +10,8 @@ class RoomDAO(BaseDAO):
     model = Room
 
     @classmethod
-    async def find_available_rooms(cls, hotel_id: int, date_from: date, date_to: date):
+    async def search_available_rooms(cls, hotel_id: int, date_from: date, date_to: date):
         async with async_session_maker() as session:
-
             booked_rooms = select(Booking.room_id).where(
                 or_(
                     and_(

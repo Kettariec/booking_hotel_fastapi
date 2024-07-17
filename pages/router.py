@@ -24,7 +24,7 @@ async def index(request: Request):
 
 @router.get("/search", response_class=HTMLResponse,
             response_model=List[SchemeHotel])
-# @cache(expire=300)
+# @cache(expire=180)
 async def get_hotels_page(
         request: Request,
         location: str,
@@ -41,13 +41,14 @@ async def get_hotels_page(
 
 @router.get("/hotels/{hotel_id}", response_class=HTMLResponse,
             response_model=List[SchemeHotel])
+# @cache(expire=180)
 async def get_hotel_rooms_page(
     request: Request,
     hotel_id: int,
     date_from: date = Query(..., description="Дата начала в формате YYYY-MM-DD"),
     date_to: date = Query(..., description="Дата окончания в формате YYYY-MM-DD")
 ):
-    rooms = await RoomDAO.find_available_rooms(hotel_id, date_from, date_to)
+    rooms = await RoomDAO.search_available_rooms(hotel_id, date_from, date_to)
     return templates.TemplateResponse("hotel_rooms.html", {
         "request": request,
         "rooms": rooms,
@@ -60,11 +61,14 @@ async def get_hotel_rooms_page(
             response_model=SchemeRoom)
 async def get_room_page(
         request: Request,
-        room_id: int
+        room_id: int,
+        date_from: date = Query(..., description="Дата начала в формате YYYY-MM-DD"),
+        date_to: date = Query(..., description="Дата окончания в формате YYYY-MM-DD")
 ):
     room = await RoomDAO.find_by_id(room_id)
     return templates.TemplateResponse("room.html", {
         "request": request,
-        "room": room
+        "room": room,
+        "date_from": date_from,
+        "date_to": date_to
     })
-

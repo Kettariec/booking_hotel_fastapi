@@ -11,6 +11,7 @@ from hotels.router import router as router_hotel
 from images.router import router as router_images
 from pages.router import router as router_pages
 from users.router import router as router_user
+from hotels.rooms.router import router as router_rooms
 from admin.admin import UserAdmin, BookingAdmin, HotelAdmin, RoomAdmin
 
 app = FastAPI()
@@ -21,6 +22,7 @@ app.mount("/static", StaticFiles(directory="static"), "static")
 app.include_router(router_user)
 app.include_router(router_booking)
 app.include_router(router_hotel)
+app.include_router(router_rooms)
 app.include_router(router_pages)
 app.include_router(router_images)
 
