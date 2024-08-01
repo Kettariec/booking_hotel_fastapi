@@ -1,6 +1,10 @@
 
-<br><h3 align="center">Hotel Booking App</h3>
-<br>
+<br><h1 align="center">Hotel Booking App</h3>
+<!-- USAGE EXAMPLES -->
+## Usage
+
+To run the web application, install the Poetry virtual environment, the necessary dependencies from pyproject.toml, populate the .env file as shown in .env.example, then perform alembic migrations using the commands "alembic init migrations", "alembic revision --autogenerate - m "Comment", "alembic upgrade head" and use the command "uvicorn main:app".
+
   
 <!-- ABOUT THE PROJECT -->
 ## Project structure
@@ -89,10 +93,6 @@ poetry.lock - Poetry file.
 pyproject.toml - necessary environmental dependencies.
 
 
-<!-- USAGE EXAMPLES -->
-## Usage
-
-To run the web application, install the Poetry virtual environment, the necessary dependencies from pyproject.toml, populate the .env file as shown in .env.example, then perform alembic migrations using the commands "alembic init migrations", "alembic revision --autogenerate - m "Comment", "alembic upgrade head" and use the command "uvicorn main:app".
 <!-- LICENSE -->
 ## License
 
@@ -105,5 +105,3 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 kettariec@gmail.com
 
 https://github.com/Kettariec/booking_hotel_fastapi
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
