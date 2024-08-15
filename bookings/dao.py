@@ -69,3 +69,11 @@ class BookingDAO(BaseDAO):
 
             else:
                 return None
+
+    @classmethod
+    async def get_bookings_by_user_id(cls, user_id: int):
+        async with async_session_maker() as session:
+            query = select(Booking).where(Booking.user_id == user_id)
+            result = await session.execute(query)
+            return result.scalars().all()
+        

@@ -5,6 +5,9 @@ from users.auth import get_password_hash, authenticate_user, create_access_token
 from users.model import User
 from users.dependencies import get_current_user
 from exceptions import UserAlreadyExistsException, IncorrectEmailOrPasswordException
+from database import async_session_maker
+from bookings.dao import BookingDAO
+from bookings.scheme import SchemeBooking
 
 router = APIRouter(
     prefix="/auth",
@@ -38,4 +41,10 @@ async def logout_user(response: Response):
 
 @router.get("/me")
 async def read_user_me(current_user: User = Depends(get_current_user)):
-    return current_user
+    async with async_session_maker() as session:
+        bookings = await BookingDAO.get_bookings_by_user_id(current_user.id)
+        bookings_schema = [SchemeBooking.from_orm(booking) for booking in bookings]
+    return {
+        "user": current_user,
+        "bookings": bookings_schema
+    }
