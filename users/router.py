@@ -41,23 +41,15 @@ async def logout_user(response: Response):
 
 @router.get("/me")
 async def read_user_me(current_user: User = Depends(get_current_user)):
-    bookings = await BookingDAO.get_bookings_by_user_id(current_user.id)
-    bookings_schema = [
-        SchemeBooking(
-            id=booking.id,
-            room_id=booking.room_id,
-            user_id=booking.user_id,
-            date_from=booking.date_from,
-            date_to=booking.date_to,
-            price=booking.price,
-            total_days=booking.total_days,
-            total_cost=booking.total_cost,
-            room_name=booking.room_name,
-            hotel_id=booking.hotel_id,
-            hotel_name=booking.hotel_name,
-            hotel_location=booking.hotel_location
-        ) for booking in bookings
-    ]
+    async with async_session_maker() as session:
+        bookings = await BookingDAO.get_bookings_by_user_id(current_user.id)
+        if not bookings:
+            return {
+                "user": current_user,
+                "bookings": [],
+                "message": "у вас пока нет бронирований"
+            }
+        bookings_schema = [SchemeBooking.from_orm(booking) for booking in bookings]
     return {
         "user": current_user,
         "bookings": bookings_schema

@@ -3,6 +3,7 @@ from dao.base import BaseDAO
 from datetime import date
 from sqlalchemy import insert, select, func, and_, or_, delete
 from hotels.rooms.model import Room
+from bookings.scheme import SchemeBooking
 from hotels.model import Hotel
 from database import async_session_maker, engine
 import logging
@@ -45,11 +46,8 @@ class BookingDAO(BaseDAO):
                 Room.quantity, booked_rooms.c.room_id
             )
 
-            print(get_free_rooms.compile(engine, compile_kwargs={"literal_binds": True}))
-
             free_rooms = await session.execute(get_free_rooms)
             free_rooms: int = free_rooms.scalar()
-            print(free_rooms)
 
             if free_rooms is None or free_rooms > 0:
                 get_price = select(Room.price).where(Room.id == room_id)
@@ -61,15 +59,43 @@ class BookingDAO(BaseDAO):
                     date_from=date_from,
                     date_to=date_to,
                     price=price,
-                ).returning(Booking)
+                ).returning(Booking.id)
 
-                new_booking = await session.execute(add_booking)
+                new_booking_id = await session.execute(add_booking)
                 await session.commit()
 
-                return new_booking.scalar()
+                new_booking_id = new_booking_id.scalar()
+
+                # Используем новый ID для получения полных данных о бронировании
+                if new_booking_id:
+                    full_booking = await cls.get_booking_by_id(new_booking_id)
+                    return full_booking
 
             else:
                 return None
+
+    @classmethod
+    async def get_booking_by_id(cls, booking_id: int):
+        async with async_session_maker() as session:
+            query = select(
+                Booking.id,
+                Booking.room_id,
+                Booking.user_id,
+                Booking.date_from,
+                Booking.date_to,
+                Booking.price,
+                Booking.total_days,
+                Booking.total_cost,
+                Room.name.label("room_name"),
+                Hotel.id.label("hotel_id"),
+                Hotel.name.label("hotel_name"),
+                Hotel.location.label("hotel_location")
+            ).join(Room, Room.id == Booking.room_id) \
+                .join(Hotel, Hotel.id == Room.hotel_id) \
+                .where(Booking.id == booking_id)
+
+            result = await session.execute(query)
+            return result.fetchone()
 
     @classmethod
     async def get_bookings_by_user_id(cls, user_id: int):
@@ -92,7 +118,15 @@ class BookingDAO(BaseDAO):
                 .where(Booking.user_id == user_id)
 
             result = await session.execute(query)
-            return result.fetchall()
+            bookings = result.fetchall()
+
+            if not bookings:
+                return []
+
+            return [
+                SchemeBooking(**booking._asdict())
+                for booking in bookings
+            ]
 
     @classmethod
     async def delete_booking_by_id(cls, booking_id: int):

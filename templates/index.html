@@ -128,6 +128,11 @@
         .delete-booking:hover {
             background-color: #c82333;
         }
+        .no-bookings-message {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -207,6 +212,9 @@
             <div id="bookingsList">
                 <!-- Bookings will be loaded here -->
             </div>
+            <div id="noBookingsMessage" class="no-bookings-message" style="display: none;">
+                Здесь пока нет бронирований
+            </div>
         </div>
     </div>
 
@@ -230,23 +238,30 @@
 
         if (response.ok) {
             const bookingsList = document.getElementById("bookingsList");
-            bookingsList.innerHTML = "";
+            const noBookingsMessage = document.getElementById("noBookingsMessage");
 
-            data.bookings.forEach(booking => {
-                const bookingDiv = document.createElement("div");
-                bookingDiv.innerHTML = `
-                    <p><strong>Город:</strong> ${booking.hotel_location}</p>
-                    <p><strong>Отель:</strong> ${booking.hotel_name}</p>
-                    <p><strong>Номер:</strong> ${booking.room_name}</p>
-                    <p><strong>Дата заезда:</strong> ${booking.date_from}</p>
-                    <p><strong>Дата выезда:</strong> ${booking.date_to}</p>
-                    <p><strong>Цена в сутки:</strong> ${booking.price} руб.</p>
-                    <p><strong>Итоговая стоимость:</strong> ${booking.total_cost} руб.</p>
-                    <button class="delete-booking" onclick="deleteBooking(${booking.id})">Отменить бронирование</button>
-                    <hr>
-                `;
-                bookingsList.appendChild(bookingDiv);
-            });
+            bookingsList.innerHTML = "";
+            noBookingsMessage.style.display = "none";
+
+            if (data.bookings.length === 0) {
+                noBookingsMessage.style.display = "block";
+            } else {
+                data.bookings.forEach(booking => {
+                    const bookingDiv = document.createElement("div");
+                    bookingDiv.innerHTML = `
+                        <p><strong>Город:</strong> ${booking.hotel_location}</p>
+                        <p><strong>Отель:</strong> ${booking.hotel_name}</p>
+                        <p><strong>Номер:</strong> ${booking.room_name}</p>
+                        <p><strong>Дата заезда:</strong> ${booking.date_from}</p>
+                        <p><strong>Дата выезда:</strong> ${booking.date_to}</p>
+                        <p><strong>Цена в сутки:</strong> ${booking.price} руб.</p>
+                        <p><strong>Итоговая стоимость:</strong> ${booking.total_cost} руб.</p>
+                        <button class="delete-booking" onclick="deleteBooking(${booking.id})">Отменить бронирование</button>
+                        <hr>
+                    `;
+                    bookingsList.appendChild(bookingDiv);
+                });
+            }
         } else {
             alert("Ошибка загрузки бронирований!");
         }
