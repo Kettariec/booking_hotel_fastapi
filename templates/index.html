@@ -235,10 +235,12 @@
             data.bookings.forEach(booking => {
                 const bookingDiv = document.createElement("div");
                 bookingDiv.innerHTML = `
-                    <p><strong>Номер:</strong> ${booking.room_id}</p>
+                    <p><strong>Город:</strong> ${booking.hotel_location}</p>
+                    <p><strong>Отель:</strong> ${booking.hotel_name}</p>
+                    <p><strong>Номер:</strong> ${booking.room_name}</p>
                     <p><strong>Дата заезда:</strong> ${booking.date_from}</p>
                     <p><strong>Дата выезда:</strong> ${booking.date_to}</p>
-                    <p><strong>Цена:</strong> ${booking.price} руб.</p>
+                    <p><strong>Цена в сутки:</strong> ${booking.price} руб.</p>
                     <p><strong>Итоговая стоимость:</strong> ${booking.total_cost} руб.</p>
                     <button class="delete-booking" onclick="deleteBooking(${booking.id})">Отменить бронирование</button>
                     <hr>
