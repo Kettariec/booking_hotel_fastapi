@@ -113,6 +113,21 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .delete-booking {
+            display: block;
+            margin-left: auto;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: right; /* Выравнивание текста в кнопке */
+        }
+        .delete-booking:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -225,6 +240,7 @@
                     <p><strong>Дата выезда:</strong> ${booking.date_to}</p>
                     <p><strong>Цена:</strong> ${booking.price} руб.</p>
                     <p><strong>Итоговая стоимость:</strong> ${booking.total_cost} руб.</p>
+                    <button class="delete-booking" onclick="deleteBooking(${booking.id})">Отменить бронирование</button>
                     <hr>
                 `;
                 bookingsList.appendChild(bookingDiv);
@@ -233,6 +249,20 @@
             alert("Ошибка загрузки бронирований!");
         }
     });
+
+    // Функция для удаления бронирования
+    async function deleteBooking(bookingId) {
+        const response = await fetch(`/booking/delete/${bookingId}`, {
+            method: "DELETE"
+        });
+
+        if (response.ok) {
+            alert("Бронирование отменено!");
+            document.getElementById("bookingsBtn").click(); // Перезагружаем список бронирований
+        } else {
+            alert("Ошибка при удалении бронирования!");
+        }
+    }
 
     document.getElementById("closeLoginModal").addEventListener("click", function() {
         document.getElementById("loginModal").style.display = "none";
@@ -247,18 +277,11 @@
     });
 
     window.onclick = function(event) {
-        if (event.target == document.getElementById("loginModal")) {
-            document.getElementById("loginModal").style.display = "none";
-        }
-        if (event.target == document.getElementById("registerModal")) {
-            document.getElementById("registerModal").style.display = "none";
-        }
-        if (event.target == document.getElementById("bookingsModal")) {
-            document.getElementById("bookingsModal").style.display = "none";
+        if (event.target.classList.contains("modal")) {
+            event.target.style.display = "none";
         }
     }
 
-    // Handle login
     document.getElementById("loginForm").addEventListener("submit", async function(event) {
         event.preventDefault();
         const email = document.getElementById("loginEmail").value;
@@ -266,21 +289,18 @@
 
         const response = await fetch("/auth/login", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
 
         if (response.ok) {
             document.getElementById("loginModal").style.display = "none";
-            updateButtonsAfterLogin();
+            updateAuthState();
         } else {
-            alert("Ошибка входа!");
+            alert("Неправильный email или пароль!");
         }
     });
 
-    // Handle registration
     document.getElementById("registerForm").addEventListener("submit", async function(event) {
         event.preventDefault();
         const email = document.getElementById("registerEmail").value;
@@ -288,59 +308,45 @@
 
         const response = await fetch("/auth/register", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
 
         if (response.ok) {
-            alert("Регистрация успешна! Пожалуйста, войдите.");
             document.getElementById("registerModal").style.display = "none";
+            updateAuthState();
         } else {
             alert("Ошибка регистрации!");
         }
     });
 
-    async function handleLogout() {
-        document.getElementById("loginBtn").disabled = true; // Disable the button to prevent multiple clicks
-        const response = await fetch("/auth/logout", { method: "POST" });
+    async function updateAuthState() {
+        const response = await fetch("/auth/me");
+        const data = await response.json();
 
         if (response.ok) {
+            document.getElementById("loginBtn").innerText = "Выйти";
+            document.getElementById("registerBtn").style.display = "none";
+            document.getElementById("bookingsBtn").style.display = "inline-block";
+        } else {
             document.getElementById("loginBtn").innerText = "Войти";
             document.getElementById("registerBtn").style.display = "inline-block";
             document.getElementById("bookingsBtn").style.display = "none";
-        } else {
-            alert("Ошибка выхода!");
         }
-
-        document.getElementById("loginBtn").disabled = false; // Re-enable the button
     }
 
-    async function updateButtonsAfterLogin() {
-        document.getElementById("loginBtn").innerText = "Выйти";
-        document.getElementById("loginBtn").onclick = handleLogout;
-
-        document.getElementById("registerBtn").style.display = "none";
-        document.getElementById("bookingsBtn").style.display = "inline-block"; // Показываем кнопку "Мои бронирования"
-    }
-
-    // Check if user is logged in on page load
-    async function checkAuth() {
-        const response = await fetch("/auth/me", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+    async function handleLogout() {
+        const response = await fetch("/auth/logout", { method: "POST" });
 
         if (response.ok) {
-            updateButtonsAfterLogin(); // Обновляем кнопки, если пользователь авторизован
+            updateAuthState();
+        } else {
+            alert("Ошибка при выходе из системы!");
         }
     }
 
-    // Run the check on page load
-    checkAuth();
-</script>
+    // Обновляем состояние аутентификации при загрузке страницы
+    updateAuthState();
+    </script>
 </body>
 </html>

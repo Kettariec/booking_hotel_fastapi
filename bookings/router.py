@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from bookings.dao import BookingDAO
 from users.model import User
 from users.dependencies import get_current_user
@@ -35,3 +35,19 @@ async def add_booking(
 
     background_tasks.add_task(send_booking_message, new_booking, user.email)
     return new_booking
+
+
+@router.delete("/delete/{booking_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_booking(
+        booking_id: int,
+        user: User = Depends(get_current_user)
+):
+    booking = await BookingDAO.get_bookings_by_user_id(user.id)
+    if not any(b.id == booking_id for b in booking):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Бронирование не найдено")
+
+    deleted = await BookingDAO.delete_booking_by_id(booking_id)
+    if not deleted:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Не удалось удалить бронирование")
+
+    return None
