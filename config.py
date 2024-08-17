@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     SMTP_PASS: str
     REDIS_HOST: str
     REDIS_PORT: int
+    JWT_SECRET_KEY: str
+    FRONTEND_URL: str
 
     class Config:
         env_file = ".env"

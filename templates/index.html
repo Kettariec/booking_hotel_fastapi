@@ -330,6 +330,7 @@
 
         if (response.ok) {
             document.getElementById("registerModal").style.display = "none";
+            alert("Вам на почту отправлено письмо для подтверждения регистрации!");
             updateAuthState();
         } else {
             alert("Ошибка регистрации!");
