@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, Depends, HTTPException
+from fastapi import APIRouter, Response, Depends, HTTPException, BackgroundTasks
 from users.scheme import SchemeUserAuth
 from users.dao import UserDAO
 from users.auth import get_password_hash, authenticate_user, create_access_token
@@ -8,9 +8,9 @@ from exceptions import UserAlreadyExistsException, IncorrectEmailOrPasswordExcep
 from database import async_session_maker
 from bookings.dao import BookingDAO
 from bookings.scheme import SchemeBooking
-from fastapi import BackgroundTasks
 from tasks.tasks import registration_message
 from config import settings
+from fastapi.responses import RedirectResponse
 import jwt
 from jose import JWTError
 
@@ -46,7 +46,7 @@ async def verify_email(token: str):
             raise HTTPException(status_code=404, detail="User not found")
         user.is_email_verified = True
         await UserDAO.update(user)
-        return {"message": "Email successfully verified"}
+        return RedirectResponse(url=f"{settings.FRONTEND_URL}")
     except JWTError:
         raise HTTPException(status_code=400, detail="Invalid token or token has expired")
 
