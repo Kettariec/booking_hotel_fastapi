@@ -8,6 +8,8 @@ from exceptions import UserAlreadyExistsException, IncorrectEmailOrPasswordExcep
 from database import async_session_maker
 from bookings.dao import BookingDAO
 from bookings.scheme import SchemeBooking
+from fastapi import BackgroundTasks
+from tasks.tasks import registration_message
 
 router = APIRouter(
     prefix="/auth",
@@ -16,12 +18,17 @@ router = APIRouter(
 
 
 @router.post("/register")
-async def register_user(user_data: SchemeUserAuth):
+async def register_user(user_data: SchemeUserAuth,
+                        background_tasks: BackgroundTasks):
     existing_user = await UserDAO.find_one_or_none(email=user_data.email)
+
     if existing_user:
         raise UserAlreadyExistsException
+
     hashed_password = get_password_hash(user_data.password)
     await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
+
+    background_tasks.add_task(registration_message, user_data.email)
 
 
 @router.post("/login")

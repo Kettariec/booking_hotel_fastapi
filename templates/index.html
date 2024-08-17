@@ -80,7 +80,7 @@
             background-color: #218838;
         }
         .top-right button:first-child {
-            margin-left: 0; /* Убираем отступ для первой кнопки */
+            margin-left: 0;
         }
         .modal {
             display: none;
@@ -123,7 +123,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            text-align: right; /* Выравнивание текста в кнопке */
+            text-align: right;
         }
         .delete-booking:hover {
             background-color: #c82333;
@@ -162,7 +162,7 @@
         </form>
     </div>
 
-    <!-- Modal Login -->
+
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeLoginModal">&times;</span>
@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <!-- Modal Register -->
+
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeRegisterModal">&times;</span>
@@ -204,13 +204,13 @@
         </div>
     </div>
 
-    <!-- Modal Bookings -->
+
     <div id="bookingsModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeBookingsModal">&times;</span>
             <h2>Мои бронирования</h2>
             <div id="bookingsList">
-                <!-- Bookings will be loaded here -->
+
             </div>
             <div id="noBookingsMessage" class="no-bookings-message" style="display: none;">
                 Здесь пока нет бронирований
@@ -267,7 +267,6 @@
         }
     });
 
-    // Функция для удаления бронирования
     async function deleteBooking(bookingId) {
         const response = await fetch(`/booking/delete/${bookingId}`, {
             method: "DELETE"
@@ -362,7 +361,6 @@
         }
     }
 
-    // Обновляем состояние аутентификации при загрузке страницы
     updateAuthState();
     </script>
 </body>

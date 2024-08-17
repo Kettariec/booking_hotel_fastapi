@@ -5,10 +5,7 @@ from sqlalchemy import insert, select, func, and_, or_, delete
 from hotels.rooms.model import Room
 from bookings.scheme import SchemeBooking
 from hotels.model import Hotel
-from database import async_session_maker, engine
-import logging
-
-logging.basicConfig(level=logging.INFO)
+from database import async_session_maker
 
 
 class BookingDAO(BaseDAO):
@@ -66,7 +63,6 @@ class BookingDAO(BaseDAO):
 
                 new_booking_id = new_booking_id.scalar()
 
-                # Используем новый ID для получения полных данных о бронировании
                 if new_booking_id:
                     full_booking = await cls.get_booking_by_id(new_booking_id)
                     return full_booking
