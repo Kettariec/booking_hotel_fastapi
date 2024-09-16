@@ -93,12 +93,6 @@ poetry.lock - Poetry file.
 pyproject.toml - necessary environmental dependencies.
 
 
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-
 <!-- CONTACT -->
 ## Contact
 
